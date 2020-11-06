@@ -65,7 +65,7 @@ def create_steps(width=20, height=20, starting_state='random', iteration_number=
     remaining_writes = 0
     remaining_writes_lock = Condition()
     if isinstance(starting_state, str):
-        state = [(np.random.rand(width * height).reshape(width, height) > 0.5).astype(np.int8)]
+        state = (np.random.rand(width * height).reshape(width, height) > 0.5).astype(np.int8)
     else:
         height, width = starting_state.shape
         state = starting_state
