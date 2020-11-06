@@ -1,5 +1,4 @@
 from multiprocessing import Process, Queue, Event, Manager
-from queue import Empty
 from sys import stdout
 from typing import List
 

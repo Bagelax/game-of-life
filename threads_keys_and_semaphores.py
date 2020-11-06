@@ -8,18 +8,15 @@ state: np.ndarray
 state_locks: List[List[Lock]]
 steps: List[np.ndarray]
 read_semaphores: List[List[Semaphore]]
-threads: List[Thread]
-remaining_writes = 0
+threads: List[List[Thread]]
+remaining_writes: int
 remaining_writes_lock: Condition
-
-test: List[List[bool]]
 
 
 def cell(pos_x, pos_y, width, height, iteration_number):
-    global state, read_semaphores, threads, steps, remaining_writes, state_locks, test, remaining_writes_lock
+    global state, read_semaphores, threads, steps, remaining_writes, state_locks, remaining_writes_lock
 
     for it_num in range(1, iteration_number + 1):
-        test[pos_y][pos_x] = False
         counter = 0
         adjacent_cells = [(-1, -1), (-1, 0), (-1, 1),
                           (0,  -1),          (0,  1),
@@ -30,7 +27,7 @@ def cell(pos_x, pos_y, width, height, iteration_number):
             i = (pos_y + adjacent_cells[current][0]) % height
             j = (pos_x + adjacent_cells[current][1]) % width
             if state_locks[i][j].acquire(blocking=False):
-                counter += 1 if state[i][j] else 0
+                counter += state[i][j]
                 state_locks[i][j].release()
                 read_semaphores[i][j].release()
                 adjacent_cells.pop(current)
@@ -60,9 +57,8 @@ def cell(pos_x, pos_y, width, height, iteration_number):
 
 
 def create_steps(width=20, height=20, starting_state='random', iteration_number=50):
-    global state, read_semaphores, threads, steps, remaining_writes, state_locks, test, remaining_writes_lock
+    global state, read_semaphores, threads, steps, remaining_writes, state_locks, remaining_writes_lock
 
-    remaining_writes = 0
     remaining_writes_lock = Condition()
     if isinstance(starting_state, str):
         state = (np.random.rand(width * height).reshape(width, height) > 0.5).astype(np.int8)
