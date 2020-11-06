@@ -76,7 +76,7 @@ def pulsar():
 
 
 def glider():
-    ret = np.zeros((30, 30))
+    ret = np.zeros((18, 18))
     ret[1][1] = True
     ret[3][1] = True
     ret[2][2] = True
