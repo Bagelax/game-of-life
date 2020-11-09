@@ -59,6 +59,9 @@ def create_steps(w=20, h=20, starting_state='random', iteration_number=50, part_
         height, width = starting_state.shape
         state = starting_state
 
+    if height % parts != 0 or width % parts != 0:
+        raise Exception('Width and height must be dividable by part edge size')
+
     steps = [np.zeros((height, width)) for _ in range(iteration_number + 1)]
     steps[0] = np.copy(state)
 

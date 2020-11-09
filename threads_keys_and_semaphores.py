@@ -67,7 +67,7 @@ def create_steps(width=20, height=20, starting_state='random', iteration_number=
         state = starting_state
 
     steps = [np.zeros((height, width)) for _ in range(iteration_number + 1)]
-    steps[0] = starting_state
+    steps[0] = state
 
     read_semaphores = [[Semaphore(0) for _ in range(width)] for _ in range(height)]
     test = [[False for _ in range(width)] for _ in range(height)]
